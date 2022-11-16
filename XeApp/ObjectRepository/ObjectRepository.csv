@@ -1,0 +1,22 @@
+﻿S.No,ObjName,Locators,ObjValue
+1,btn_CookiesAccept,XPath,//button[text()='Accept']
+2,div_OverlayWindow,XPath,"//div[contains(@id,'inner-overlay')]"
+3,txt_Amount,XPath,//input[@id='amount']
+4,div_ErrorText,XPath,"//div[contains(@class,'currency-converter__ErrorText')]"
+5,txt_FromCurrencyDropdown,XPath,//input[@id='midmarketFromCurrency']
+6,list_FromCurrencyDropdown,XPath,"//li[contains(@id,'midmarketFromCurrency')]"
+7,txt_ToCurrencyDropdown,XPath,//input[@id='midmarketToCurrency']
+8,list_ToCurrencyDropdown,XPath,"//li[contains(@id,'midmarketToCurrency')]"
+9,btn_Convert,XPath,//button[text()='Convert']
+10,div_ConversionUnitRate,XPath,"//div[contains(@class,'unit-rates')]/p[1]"
+11,ConversionResultRate,XPath,"//p[contains(@class,'result__BigRate')]"
+12,lnk_ViewTransferQuote,XPath,//a[text()='View transfer quote']
+13,txt_SendingCurrency,XPath,//input[@id='sending-currency']
+14,txt_ReceivingCurrency,XPath,//input[@id='receiving-currency']
+15,list_SendingCurrency,XPath,"//li[contains(@id,'sending-currency')]"
+16,list_ReceivingCurrency,XPath,"//li[contains(@id,'receiving-currency')]"
+17,txt_SendingAmount,XPath,//input[@aria-label='Sending amount']
+18,btn_SigninAndSend,XPath,//a[text()='Sign in and send']
+19,txt_Email,XPath,//input[@id='email']
+20,txt_Password,XPath,//input[@id='password']
+21,btn_RegisterNow,XPath,//button[text()='Register now']
