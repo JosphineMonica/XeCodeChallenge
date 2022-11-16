@@ -103,7 +103,7 @@ namespace XeCurrencyApp.Utilities
         public static void ScrollBy()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            PageLoad();
+            PageLoad(100);
             js.ExecuteScript("window.scrollBy(0,300)");
         }
 
@@ -148,9 +148,9 @@ namespace XeCurrencyApp.Utilities
             _driver.Navigate().Refresh();
         }
 
-        public static void PageLoad()
+        public static void PageLoad(int val)
         {
-            Thread.Sleep(100);
+            Thread.Sleep(val);
         }
     }
 }

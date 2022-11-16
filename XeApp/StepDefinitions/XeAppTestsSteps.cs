@@ -51,7 +51,6 @@ namespace XeCurrencyApp
         [When(@"I click on Signin and Send button that redirect to account creation Page")]
         public void WhenIClickOnSigninAndSendButtonThatRedirectToAccountCreationPage()
         {
-            Utils.WebdriverWait(10, "btn_SigninAndSend");
             Utils.ExecutionStep("btn_SigninAndSend", "Click");
         }
 

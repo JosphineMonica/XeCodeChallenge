@@ -57,6 +57,8 @@ namespace XeCurrencyApp
             if (!Utils.CheckIfElementExists("div_ConversionUnitRate"))
                 Utils.ScrollBy();
 
+            Utils.Screenshot("Currency Validation");
+
             //Checking UnitRate
             var tex = _driver.FindElement(By.XPath(Utils.GetValue("div_ConversionUnitRate"))).Text;
             var unitRate = tex.Split(' ').ToList();
@@ -68,8 +70,7 @@ namespace XeCurrencyApp
             double ActualVal = Math.Round(double.Parse(resultBigRate[0].Substring(0, 8)), 2);
 
             Console.WriteLine("Expected Rate: " + expectedVal +  " Actual Rate: " + ActualVal);
-            Utils.ScrollBy();
-            Utils.Screenshot("Currency Validation");
+
             //Comparing UnitRate calculation against ResultRate
             Assert.AreEqual(expectedVal, ActualVal);
         }
@@ -80,7 +81,7 @@ namespace XeCurrencyApp
                 Assert.True(_driver.FindElement(By.XPath(Utils.GetValue("div_ErrorText"))).Text.Equals(ErrorMsg));
         }
 
-        public void SendMoney(string amount, string fromCurrency, string toCurrency)
+        public async void SendMoney(string amount, string fromCurrency, string toCurrency)
         {
             Utils.ExecutionStep("txt_SendingCurrency", "Click");
             Utils.WebdriverWait(10, "list_SendingCurrency");
@@ -91,12 +92,19 @@ namespace XeCurrencyApp
             Utils.ExecutionStep("txt_ReceivingCurrency", "Click");
             Utils.WebdriverWait(10, "list_ReceivingCurrency");
             _driver.FindElement(By.XPath(Utils.GetValue("list_ReceivingCurrency") + "/div[text()='" + toCurrency + "']")).Click();
+            
+            Utils.ScrollBy();
 
-            Utils.PageLoad();
+            if (Utils.CheckIfElementExists("div_ServiceUnavailableError"))
+            {
+                Utils.Screenshot("Temporarily Unavailable Error");
+                Utils.PageLoad(300);               
+            }
         }
 
         public void LoginUsingCredentials()
         {
+            Utils.PageLoad(100);
             Utils.ExecutionStep("txt_Email", "Enter", ConfigurationManager.AppSettings["TestEmail"]);
             Utils.ExecutionStep("txt_Password", "Enter", ConfigurationManager.AppSettings["TestPassword"]);
             if (!Utils.CheckIfElementExists("btn_RegisterNow"))

@@ -20,3 +20,4 @@
 19,txt_Email,XPath,//input[@id='email']
 20,txt_Password,XPath,//input[@id='password']
 21,btn_RegisterNow,XPath,//button[text()='Register now']
+22,div_ServiceUnavailableError,XPath,//div[text()='Our service is temporarily unavailable. Please try again shortly.']
