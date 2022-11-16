@@ -1,5 +1,5 @@
 # XeCodeChallenge
-Objective: To create automation framework and perform end to end tests for Xe.com application.
+Objective: To create automation framework from the scratch and perform end to end tests for Xe.com application.
 
 > **Prerequisites**:
 > - Visual Studio [Version 2022 is used here]
