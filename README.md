@@ -5,6 +5,18 @@ Objective: To create automation framework from the scratch and perform end to en
 > - Visual Studio [Version 2022 is used here]
 > - SpecFlow plugin for [Visual Studio](https://docs.specflow.org/projects/getting-started/en/latest/GettingStarted/Step1.html)
 
+About Framework
+
+> - BDD Feature files are placed under Feature Folder
+> - External csv files is created to hold object repository. Thus, modifying object properties becomes easier.
+> - Scenario Hooks and Utilies Folder are created to improve reusability, maintainability of the scripts.
+> - App.Config file holds the URL and Credential information for security reasons.
+> - Runtime Results folder is created for every single run and screenshots is stored within Results folder.
+
+Areas to Implement
+> - Word documents can be generated using the screenshots placed in the runtime order to reduce manual documentation efforts.
+> - HTML Reporting either own or Extent Reports can be implemented to capture each step execution.
+
 **Steps to Execute Test cases**
 
 1. Please clone the repository and download the solution.
