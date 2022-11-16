@@ -9,19 +9,19 @@ Objective: To create automation framework from the scratch and perform end to en
 
 1. Please clone the repository and download the solution.
 2. Add following plugins from Nuget Package Manager
-   > -NUnit3TestAdapter
-   > -Csv Helper
-   > -DotNetSeleniumExtras.WaitHelpers
-   > -SpecFlow
-   > -SpecFlow.NUnit
-   > -Selenium.WebDriver.ChromeDriver
-   > -Selenium.Support
+   > - NUnit3TestAdapter
+   > - Csv Helper
+   > - DotNetSeleniumExtras.WaitHelpers
+   > - SpecFlow
+   > - SpecFlow.NUnit
+   > - Selenium.WebDriver.ChromeDriver
+   > - Selenium.Support
 3. Build the solution and check for any package errors. If so, kindly install appropriate references.
 4. Once the build is successful, click on Test-> Test Explorer
 5. There are three test cases available. Click on each test case to run. 
-   > -Scenario 1: This Scenario covers Conversion section testing by supplying invalid and valid inputs.
-   > -Scenario 2: This scenario covers the Send money Section.
-   > -Scenario 3. This is a combined scenario of Conversion followed by send money.
+   > - Scenario 1: This Scenario covers Conversion section testing by supplying invalid and valid inputs.
+   > - Scenario 2: This scenario covers the Send money Section.
+   > - Scenario 3. This is a combined scenario of Conversion followed by send money.
 7. Once the test case run is successful, I have created Results folder where the Screenshots is stored for each testcase.
 
 
