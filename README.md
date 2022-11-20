@@ -36,11 +36,16 @@ Areas to Implement
    > - Scenario 3. This is a combined scenario of Conversion followed by send money.
 7. Once the test case run is successful, I have created Results folder where the Screenshots is stored for each testcase.
 
+About Postman
+1. Create a collection of tests and send GET, POST request independently.
+2. Written scripts within Tests section to validate the given scenarios.
+3. Screenshots are placed in the Postman Testcase word document.
 
 ## Observations
 > - In Convert section, after clicking the "convert" button, "View Transfer Quote" button appears and clicking on the "View Transfer Quote" button displays no quotation values but redirects to fresh "Send" Money Section.
 > - When the naviagtion occurs from "Convert" to "Send" section, the values entered in "Convert" section is not sent to "Send" section which lets user to again enter the currency details.
 > - In Convert section, whenever new currency is changed either is From or To currency Field, "Convert" or "View Transfer Quote" button disappears from second search.
-
+> - When the dropdown values are being selected, it takes few seconds to load and hence wait time is set to avoid failures but it makes the execution slow.
+> - In Send Section, when receive currency dropdown is selected and temporarily unavailable message appears till the field gets loaded. This is also handled in the code.
 
 
