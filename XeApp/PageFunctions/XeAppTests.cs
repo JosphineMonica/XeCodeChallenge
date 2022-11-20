@@ -17,12 +17,15 @@ namespace XeCurrencyApp
                 _driver.Navigate().GoToUrl(ConfigurationManager.AppSettings[PageURL]);
                 ExecutionStep("btn_CookiesAccept", "Click");
 
-                if (PageURL.Equals("Convert"))
-                    WebdriverWait(10, "div_OverlayWindow");
-
-                PageRefresh();
                 if (_driver.Title.Contains("Xe Currency Converter"))
                     Console.WriteLine("Page launched successfully for the URL: " + ConfigurationManager.AppSettings[PageURL]);
+
+                if (PageURL.Equals("Convert"))
+                {
+                    WebdriverWait(10, "div_OverlayWindow");
+                    PageRefresh();
+                }
+
             }
             catch (Exception e)
             {
@@ -85,6 +88,7 @@ namespace XeCurrencyApp
             ExecutionStep("txt_ReceivingCurrency", "Click");
             WebdriverWait(10, "list_ReceivingCurrency");
             _driver.FindElement(By.XPath(GetValue("list_ReceivingCurrency") + "/div[text()='" + toCurrency + "']")).Click();
+            PageLoad(10);
 
             ScrollBy();
 
