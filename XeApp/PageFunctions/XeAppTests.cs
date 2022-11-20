@@ -88,7 +88,7 @@ namespace XeCurrencyApp
             ExecutionStep("txt_ReceivingCurrency", "Click");
             WebdriverWait(10, "list_ReceivingCurrency");
             _driver.FindElement(By.XPath(GetValue("list_ReceivingCurrency") + "/div[text()='" + toCurrency + "']")).Click();
-            PageLoad(10);
+            PageLoad(100);
 
             ScrollBy();
 
