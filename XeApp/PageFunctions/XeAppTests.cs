@@ -7,26 +7,20 @@ using XeCurrencyApp.Utilities;
 
 namespace XeCurrencyApp
 {
-    public class XeAppTests 
+    public class XeAppTests : Utils
     {
-        public IWebDriver _driver;
-
-        public XeAppTests(IWebDriver driver)
-        {
-            _driver = driver;
-        }
 
         public void LaunchAppforGivenURL(string PageURL)
         {
             try
             {
                 _driver.Navigate().GoToUrl(ConfigurationManager.AppSettings[PageURL]);
-                Utils.ExecutionStep("btn_CookiesAccept", "Click");
+                ExecutionStep("btn_CookiesAccept", "Click");
 
                 if (PageURL.Equals("Convert"))
-                    Utils.WebdriverWait(10, "div_OverlayWindow");
+                    WebdriverWait(10, "div_OverlayWindow");
 
-                Utils.PageRefresh();
+                PageRefresh();
                 if (_driver.Title.Contains("Xe Currency Converter"))
                     Console.WriteLine("Page launched successfully for the URL: " + ConfigurationManager.AppSettings[PageURL]);
             }
@@ -38,82 +32,87 @@ namespace XeCurrencyApp
 
         public void ConvertCurrencyforGivenAmount(string amount, string fromCurrency, string toCurrency)
         {
-            Utils.ExecutionStep("txt_Amount", "Enter", amount);
+            ExecutionStep("txt_Amount", "Enter", amount);
 
-            Utils.ExecutionStep("txt_FromCurrencyDropdown", "Click");
-            Utils.WebdriverWait(10, "list_FromCurrencyDropdown");
-            _driver.FindElement(By.XPath(Utils.GetValue("list_FromCurrencyDropdown") + "/div[text()='" + fromCurrency + "']")).Click();
+            ExecutionStep("txt_FromCurrencyDropdown", "Click");
+            WebdriverWait(10, "list_FromCurrencyDropdown");
+            _driver.FindElement(By.XPath(GetValue("list_FromCurrencyDropdown") + "/div[text()='" + fromCurrency + "']")).Click();
 
-            Utils.ExecutionStep("txt_ToCurrencyDropdown", "Click");
-            Utils.WebdriverWait(10, "list_ToCurrencyDropdown");
-            _driver.FindElement(By.XPath(Utils.GetValue("list_ToCurrencyDropdown") + "/div[text()='" + toCurrency + "']")).Click();
-            
-            if (Utils.CheckIfElementExists("btn_Convert"))
-                Utils.ExecutionStep("btn_Convert", "Click", "", true);
+            ExecutionStep("txt_ToCurrencyDropdown", "Click");
+            WebdriverWait(10, "list_ToCurrencyDropdown");
+            _driver.FindElement(By.XPath(GetValue("list_ToCurrencyDropdown") + "/div[text()='" + toCurrency + "']")).Click();
+
+            if (CheckIfElementExists("btn_Convert"))
+                ExecutionStep("btn_Convert", "Click", "", true);
         }
 
         public void ValidateCurrencyConversion(string amount)
         {
-            if (!Utils.CheckIfElementExists("div_ConversionUnitRate"))
-                Utils.ScrollBy();
-
-            Utils.Screenshot("Currency Validation");
+            if (!CheckIfElementExists("div_ConversionUnitRate"))
+                ScrollBy();
 
             //Checking UnitRate
-            var tex = _driver.FindElement(By.XPath(Utils.GetValue("div_ConversionUnitRate"))).Text;
+            var tex = _driver.FindElement(By.XPath(GetValue("div_ConversionUnitRate"))).Text;
             var unitRate = tex.Split(' ').ToList();
             double expectedVal = Math.Round(double.Parse(unitRate[3]) * double.Parse(amount), 2);
 
             //Checking ResultRate
-            var act = _driver.FindElement(By.XPath(Utils.GetValue("ConversionResultRate"))).Text;
+            var act = _driver.FindElement(By.XPath(GetValue("ConversionResultRate"))).Text;
             var resultBigRate = act.Split(' ').ToList();
             double ActualVal = Math.Round(double.Parse(resultBigRate[0].Substring(0, 8)), 2);
 
-            Console.WriteLine("Expected Rate: " + expectedVal +  " Actual Rate: " + ActualVal);
-
+            Console.WriteLine("Expected Rate: " + expectedVal + " Actual Rate: " + ActualVal);
+            ScrollBy();
+            Screenshot("Currency Validation");
             //Comparing UnitRate calculation against ResultRate
             Assert.AreEqual(expectedVal, ActualVal);
         }
 
         public void ValidateCurrencyFieldErrors(string input, string ErrorMsg)
         {
-                Utils.ExecutionStep("txt_Amount", "Enter", input, true);
-                Assert.True(_driver.FindElement(By.XPath(Utils.GetValue("div_ErrorText"))).Text.Equals(ErrorMsg));
+            ExecutionStep("txt_Amount", "Enter", input, true);
+            Assert.True(_driver.FindElement(By.XPath(GetValue("div_ErrorText"))).Text.Equals(ErrorMsg));
         }
 
-        public async void SendMoney(string amount, string fromCurrency, string toCurrency)
+        public void SendMoney(string amount, string fromCurrency, string toCurrency)
         {
-            Utils.ExecutionStep("txt_SendingCurrency", "Click");
-            Utils.WebdriverWait(10, "list_SendingCurrency");
-            _driver.FindElement(By.XPath(Utils.GetValue("list_SendingCurrency") + "/div[text()='" + fromCurrency + "']")).Click();
+            ExecutionStep("txt_SendingCurrency", "Click");
+            WebdriverWait(10, "list_SendingCurrency");
+            _driver.FindElement(By.XPath(GetValue("list_SendingCurrency") + "/div[text()='" + fromCurrency + "']")).Click();
 
-            Utils.ExecutionStep("txt_SendingAmount", "Enter", amount);
+            ExecutionStep("txt_SendingAmount", "Enter", amount);
 
-            Utils.ExecutionStep("txt_ReceivingCurrency", "Click");
-            Utils.WebdriverWait(10, "list_ReceivingCurrency");
-            _driver.FindElement(By.XPath(Utils.GetValue("list_ReceivingCurrency") + "/div[text()='" + toCurrency + "']")).Click();
-            
-            Utils.ScrollBy();
+            ExecutionStep("txt_ReceivingCurrency", "Click");
+            WebdriverWait(10, "list_ReceivingCurrency");
+            _driver.FindElement(By.XPath(GetValue("list_ReceivingCurrency") + "/div[text()='" + toCurrency + "']")).Click();
 
-            if (Utils.CheckIfElementExists("div_ServiceUnavailableError"))
+            ScrollBy();
+
+            if (CheckIfElementExists("div_ServiceUnavailableError"))
             {
-                Utils.Screenshot("Temporarily Unavailable Error");
-                Utils.PageLoad(300);               
+                Screenshot("Temporarily Unavailable Error");
+                PageLoad(100);
             }
         }
 
-        public void LoginUsingCredentials()
+        public void ClickWebElement(string ObjName)
         {
-            Utils.PageLoad(100);
-            Utils.ExecutionStep("txt_Email", "Enter", ConfigurationManager.AppSettings["TestEmail"]);
-            Utils.ExecutionStep("txt_Password", "Enter", ConfigurationManager.AppSettings["TestPassword"]);
-            if (!Utils.CheckIfElementExists("btn_RegisterNow"))
-                Utils.ScrollBy();
-            Assert.True(_driver.FindElement(By.XPath(Utils.GetValue("btn_RegisterNow"))).Enabled);
-            Utils.ScrollBy();
-            Utils.Screenshot("RegisterNow");
+            WebdriverWait(10, ObjName);
+            ExecutionStep(ObjName, "Click");
         }
 
-       
+
+        public void LoginUsingCredentials()
+        {
+            ExecutionStep("txt_Email", "Enter", ConfigurationManager.AppSettings["TestEmail"]);
+            ExecutionStep("txt_Password", "Enter", ConfigurationManager.AppSettings["TestPassword"]);
+            if (!CheckIfElementExists("btn_RegisterNow"))
+                ScrollBy();
+            Assert.True(_driver.FindElement(By.XPath(GetValue("btn_RegisterNow"))).Enabled);
+            ScrollBy();
+            Screenshot("RegisterNow");
+        }
+
+
     }
 }

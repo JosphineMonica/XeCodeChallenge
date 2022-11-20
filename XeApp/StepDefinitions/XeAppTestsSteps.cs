@@ -1,18 +1,15 @@
 using TechTalk.SpecFlow;
-using XeCurrencyApp.ScenarioHooks;
-using XeCurrencyApp.Utilities;
 
 namespace XeCurrencyApp
 {
     [Binding]
     public class XeAppTestsSteps
     {
-        XeAppTests xeApp = new XeAppTests(Hooks._driver);
+        XeAppTests xeApp = new XeAppTests();
 
         [Given(@"I launch Xe Currency Converter Web application '([^']*)' URL")]
         public void GivenILaunchXeCurrencyConverterWebApplicationURL(string Page)
         {
-            Utils.CreateResultsFolderPath();
             xeApp.LaunchAppforGivenURL(Page);
         }
 
@@ -51,7 +48,7 @@ namespace XeCurrencyApp
         [When(@"I click on Signin and Send button that redirect to account creation Page")]
         public void WhenIClickOnSigninAndSendButtonThatRedirectToAccountCreationPage()
         {
-            Utils.ExecutionStep("btn_SigninAndSend", "Click");
+            xeApp.ClickWebElement("btn_SigninAndSend");
         }
 
         [Then(@"I enter email and password for TestUser, Register Now button should be Enabled")]
@@ -63,9 +60,7 @@ namespace XeCurrencyApp
         [When(@"I click on View Transfer Quote and the application is redirected to send money section")]
         public void WhenIClickOnViewTransferQuoteAndTheApplicationIsRedirectedToSendMoneySection()
         {
-            Utils.ExecutionStep("lnk_ViewTransferQuote","Click");
-            Utils.ScrollBy();
-            Utils.Screenshot("lnk_ViewTransferQuote");
+            xeApp.ClickWebElement("lnk_ViewTransferQuote");
         }
 
 

@@ -1,8 +1,9 @@
-﻿using AventStack.ExtentReports;
-using AventStack.ExtentReports.Reporter;
-using CsvHelper;
+﻿using CsvHelper;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -11,6 +12,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using TechTalk.SpecFlow;
+using WebDriverManager.DriverConfigs.Impl;
 using XeCurrencyApp.ScenarioHooks;
 
 namespace XeCurrencyApp.Utilities
@@ -23,19 +25,16 @@ namespace XeCurrencyApp.Utilities
 
         private static string ObjRepPath = Path.Combine(Environment.CurrentDirectory, @"XeApp\ObjectRepository\ObjectRepository.csv");
 
-        private static IWebDriver _driver = Hooks._driver;
+        public static IWebDriver _driver = null;
 
-       private static Actions actions = new Actions(_driver);
-
-
-        public static void CreateResultsFolderPath()
+        public void CreateResultsFolderPath()
         {
             ResultsFolderPath = Path.Combine(Environment.CurrentDirectory, @"Results\",
                 ScenarioContext.Current.ScenarioInfo.Title + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"));
             if (!Directory.Exists(ResultsFolderPath))
                 Directory.CreateDirectory(ResultsFolderPath);
         }
-        public static void Screenshot(string screenName)
+        public void Screenshot(string screenName)
         {
             ScreenShotPath = Path.Combine(ResultsFolderPath, @"Screenshots\");
             if (!Directory.Exists(ScreenShotPath))
@@ -44,7 +43,7 @@ namespace XeCurrencyApp.Utilities
             ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile(ScreenShotPath, ScreenshotImageFormat.Png);
         }
 
-        public static bool CheckIfElementExists(string ObjName)
+        public bool CheckIfElementExists(string ObjName)
         {
             try
             {
@@ -59,7 +58,7 @@ namespace XeCurrencyApp.Utilities
             }
         }
 
-        public static string GetValue(string inputObjName)
+        public string GetValue(string inputObjName)
         {
             try
             {
@@ -86,7 +85,7 @@ namespace XeCurrencyApp.Utilities
             }
         }
 
-        public static void WebdriverWait(int timeSpan, string ObjName)
+        public void WebdriverWait(int timeSpan, string ObjName)
         {
             try
             {
@@ -96,18 +95,18 @@ namespace XeCurrencyApp.Utilities
             }
             catch (Exception e)
             {
-                Assert.Fail("WebdriverWait: "+ e.Message);
+                Assert.Fail("WebdriverWait: " + e.Message);
             }
         }
 
-        public static void ScrollBy()
+        public void ScrollBy()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
             PageLoad(100);
             js.ExecuteScript("window.scrollBy(0,300)");
         }
 
-        public static void ExecutionStep(string ObjName, string Action, string Value = null, bool screenshot = false)
+        public void ExecutionStep(string ObjName, string Action, string Value = null, bool screenshot = false)
         {
             try
             {
@@ -126,31 +125,63 @@ namespace XeCurrencyApp.Utilities
                         _driver.FindElement(By.XPath(GetValue(ObjName))).SendKeys(Keys.Control + "a" + Keys.Backspace);
                         break;
                     case "Click":
-                        if (!Utils.CheckIfElementExists(ObjName))
-                            actions.MoveToElement(_driver.FindElement(By.XPath(GetValue(ObjName))));
+                        if (!CheckIfElementExists(ObjName))
+                            new Actions(_driver).MoveToElement(_driver.FindElement(By.XPath(GetValue(ObjName))));
                         _driver.FindElement(By.XPath(GetValue(ObjName))).Click();
                         break;
                     default:
                         break;
 
                 }
-                Screenshot(Action + "_" + ObjName + "_" +DateTime.Now.ToString("HH-mm-ss"));
+                Screenshot(Action + "_" + ObjName + "_" + DateTime.Now.ToString("HH-mm-ss"));
             }
             catch (Exception e)
             {
-                Screenshot("Failed Steps_"+ Action + "_" + ObjName + "_" + DateTime.Now.ToString("HH-mm-ss"));
+                Screenshot("Failed Steps_" + Action + "_" + ObjName + "_" + DateTime.Now.ToString("HH-mm-ss"));
                 Assert.Fail("ExecutionStep:" + e.Message);
             }
         }
 
-        public static void PageRefresh()
+        public void PageRefresh()
         {
             _driver.Navigate().Refresh();
         }
 
-        public static void PageLoad(int val)
+        public void PageLoad(int timeMilliSeconds)
         {
-            Thread.Sleep(val);
+            Thread.Sleep(timeMilliSeconds);
+        }
+
+        public void InitDriver(string browserName = "Chrome")
+        {
+            switch (browserName.ToUpper())
+            {
+                case "CHROME":
+                    new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                    var chromeOptions = new ChromeOptions();
+                    _driver = new ChromeDriver(chromeDriverService, chromeOptions);
+                    break;
+                case "FIREFOX":
+                    new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig());
+                    _driver = new FirefoxDriver();
+                    break;
+                case "IE":
+                    new WebDriverManager.DriverManager().SetUpDriver(new InternetExplorerConfig());
+                    _driver = new InternetExplorerDriver();
+                    break;
+                default:
+                    Console.WriteLine("Please give valid input: " + browserName);
+                    break;
+            }
+
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+            _driver.Manage().Window.Maximize();
+        }
+
+        public void CloseBrowser()
+        {
+            _driver.Quit();
         }
     }
 }
